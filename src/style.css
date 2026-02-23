@@ -1,0 +1,69 @@
+/* =========================
+   Dark Theme (global)
+   ========================= */
+
+/* 색상 토큰(실무에서 제일 많이 쓰는 방식) */
+:root {
+  --bg: #121212;
+  --card: #1e1e1e;
+  --card-2: #181818;
+  --text: #eaeaea;
+  --muted: #a9a9a9;
+  --border: #2a2a2a;
+  --border-2: #333;
+  --primary: #9ecbff;
+
+  --radius: 14px;
+}
+
+/* 기본 리셋 */
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* 링크 */
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+a:hover {
+  opacity: 0.9;
+  text-decoration: underline;
+}
+
+/* 입력류 공통 */
+input,
+textarea {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border-2);
+  border-radius: 10px;
+  outline: none;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--primary);
+}
+
+/* 버튼 공통 */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Vite 기본 템플릿이 #app을 가운데 정렬/센터링하는데,
+   우리는 웹사이트 레이아웃이니까 “센터링 제거” */
+#app {
+  min-height: 100vh;
+}
