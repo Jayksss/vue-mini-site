@@ -1,25 +1,42 @@
 <template>
-  <section class="wrap" v-if="product">
-    <div class="layout">
-      <img class="img" :src="product.image" :alt="product.name" />
-      <div class="info">
-        <h1 class="name">{{ product.name }}</h1>
-        <div class="price">{{ product.price.toLocaleString() }}원</div>
-        <p class="desc">{{ product.description }}</p>
+  <v-container v-if="product" class="py-6">
+    <v-row>
+      <v-col cols="12" md="6">
+        <v-img
+          :src="product.image"
+          :alt="product.name"
+          aspect-ratio="1"
+          cover
+          class="rounded-lg"
+        />
+      </v-col>
+      <v-col cols="12" md="6">
+        <h1 class="text-h4 mb-2">{{ product.name }}</h1>
+        <div class="text-h6 text-primary mb-3">{{ product.price.toLocaleString() }}원</div>
+        <p class="text-body-1 text-medium-emphasis mb-4">{{ product.description }}</p>
 
-        <div class="actions">
-          <input class="qty" type="number" min="1" v-model.number="qty" />
-          <button class="btn" @click="addToCart">장바구니 담기</button>
-          <RouterLink class="link" to="/cart">장바구니로</RouterLink>
+        <div class="d-flex align-center flex-wrap gap-2">
+          <v-text-field
+            v-model.number="qty"
+            type="number"
+            min="1"
+            density="compact"
+            hide-details
+            style="max-width: 100px;"
+            variant="outlined"
+            rounded="lg"
+          />
+          <v-btn color="primary" rounded="lg" @click="addToCart">장바구니 담기</v-btn>
+          <v-btn variant="outlined" rounded="lg" :to="{ name: 'cart' }">장바구니로</v-btn>
         </div>
-      </div>
-    </div>
-  </section>
+      </v-col>
+    </v-row>
+  </v-container>
 
-  <section class="wrap" v-else>
-    <h1 class="name">상품을 찾을 수 없습니다.</h1>
-    <RouterLink to="/">목록으로</RouterLink>
-  </section>
+  <v-container v-else class="py-6">
+    <h1 class="text-h5 mb-3">상품을 찾을 수 없습니다.</h1>
+    <v-btn rounded="lg" :to="{ name: 'home' }">목록으로</v-btn>
+  </v-container>
 </template>
 
 <script setup>
@@ -30,84 +47,12 @@ import { useCartStore } from '../stores/cart'
 
 const route = useRoute()
 const cart = useCartStore()
-
 const qty = ref(1)
 
-const product = computed(() => {
-  return products.find((p) => p.id === route.params.id)
-})
+const product = computed(() => products.find((p) => p.id === route.params.id))
 
 function addToCart() {
   if (!product.value) return
   cart.add(product.value, qty.value)
 }
 </script>
-
-<style scoped>
-.wrap {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 18px 16px;
-}
-
-.layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-}
-
-.img {
-  width: 100%;
-  border-radius: 14px;
-  border: 1px solid #eee;
-}
-
-.name {
-  margin: 0 0 10px;
-}
-
-.price {
-  font-size: 18px;
-  font-weight: 800;
-  margin-bottom: 10px;
-}
-
-.desc {
-  color: #444;
-  line-height: 1.5;
-}
-
-.actions {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-top: 14px;
-}
-
-.qty {
-  width: 80px;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-}
-
-.btn {
-  border: 1px solid #111;
-  background: #111;
-  color: #fff;
-  padding: 10px 12px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.link {
-  text-decoration: none;
-  color: #111;
-}
-
-@media (max-width: 860px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-}
-</style>

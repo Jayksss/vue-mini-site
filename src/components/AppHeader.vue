@@ -1,65 +1,69 @@
 <template>
-  <header class="header">
-    <div class="inner">
-      <RouterLink class="brand" to="/">vue-mini-site</RouterLink>
+  <v-app-bar flat class="app-bar px-4" height="56">
+    <v-app-bar-title class="py-2">
+      <RouterLink to="/" class="brand-link">
+        vue-mini-site
+      </RouterLink>
+    </v-app-bar-title>
 
-      <nav class="nav">
-        <RouterLink class="link" to="/">상품</RouterLink>
-        <RouterLink class="link" to="/cart">
-          장바구니 <span class="badge">{{ cart.totalQty }}</span>
-        </RouterLink>
-      </nav>
+    <v-spacer />
+
+    <div class="d-flex align-center" style="gap: 0.5rem;">
+      <div class="d-flex align-center theme-toggle">
+        <v-icon size="small" :icon="isDark ? 'mdi-weather-night' : 'mdi-weather-sunny'" />
+        <v-switch
+          :model-value="isDark"
+          hide-details
+          density="compact"
+          color="primary"
+          class="ms-1"
+          @update:model-value="toggleTheme"
+        />
+      </div>
+
+      <v-btn variant="text" rounded="lg" :to="{ name: 'home' }">상품</v-btn>
+      <v-badge :content="cart.totalQty" color="primary" :model-value="cart.totalQty > 0">
+        <v-btn variant="text" rounded="lg" :to="{ name: 'cart' }">장바구니</v-btn>
+      </v-badge>
     </div>
-  </header>
+  </v-app-bar>
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useTheme } from 'vuetify'
 import { useCartStore } from '../stores/cart'
+
+const theme = useTheme()
 const cart = useCartStore()
+
+const isDark = computed(() => theme.global.name.value === 'dark')
+
+function toggleTheme() {
+  const next = theme.global.name.value === 'dark' ? 'light' : 'dark'
+  theme.global.name.value = next
+  localStorage.setItem('vue-mini-site.theme', next)
+}
 </script>
 
 <style scoped>
-.header {
-  position: sticky;
-  top: 0;
-  background: #fff;
-  border-bottom: 1px solid #eee;
+.app-bar {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.12);
 }
 
-.inner {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.brand {
-  font-weight: 800;
+.brand-link {
   text-decoration: none;
-  color: #111;
+  font-weight: 700;
+  font-size: 1.125rem;
+  letter-spacing: -0.02em;
+  color: rgb(var(--v-theme-primary));
 }
 
-.nav {
-  display: flex;
-  gap: 12px;
+.brand-link:hover {
+  opacity: 0.88;
 }
 
-.link {
-  text-decoration: none;
-  color: #333;
-}
-
-.badge {
-  display: inline-block;
-  min-width: 18px;
-  padding: 0 6px;
-  border-radius: 999px;
-  background: #111;
-  color: #fff;
-  font-size: 12px;
-  text-align: center;
-  margin-left: 6px;
+.theme-toggle {
+  padding-right: 0.25rem;
 }
 </style>

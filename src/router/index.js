@@ -1,17 +1,27 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import Home from '../pages/Home.vue'
+import SearchResults from '../pages/SearchResults.vue'
 import ProductDetail from '../pages/ProductDetail.vue'
 import Cart from '../pages/Cart.vue'
 import Checkout from '../pages/Checkout.vue'
 import NotFound from '../pages/NotFound.vue'
 
 const routes = [
-    { path: '/', name: 'home', component: Home },
-    { path: '/product/:id', name: 'productDetail', component: ProductDetail, props: true },
-    { path: '/cart', name: 'cart', component: Cart },
-    { path: '/checkout', name: 'checkout', component: Checkout },
-    { path: '/:pathMatch(.*)*', name: 'notFound', component: NotFound },
+  { path: '/', name: 'home', component: Home },
+  {
+  path: '/search',
+  name: 'search',
+  component: SearchResults,
+  props: (route) => ({
+    keyword: route.query.keyword || '',
+    condition: route.query.condition || 'all',
+  }),
+},
+  { path: '/product/:id', name: 'productDetail', component: ProductDetail, props: true },
+  { path: '/cart', name: 'cart', component: Cart },
+  { path: '/checkout', name: 'checkout', component: Checkout },
+  { path: '/:pathMatch(.*)*', name: 'notFound', component: NotFound },
 ]
 
 const router = createRouter({

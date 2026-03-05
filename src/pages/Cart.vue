@@ -1,162 +1,233 @@
 <template>
-  <section class="wrap">
-    <h1 class="title">장바구니</h1>
+  <div class="cart-page">
+    <v-container class="py-6">
+      <h1 class="cart-title">장바구니</h1>
 
-    <div v-if="cart.items.length === 0" class="empty">
-      장바구니가 비어있습니다.
-      <div style="margin-top:10px;">
-        <RouterLink to="/">상품 보러가기</RouterLink>
-      </div>
-    </div>
+      <v-alert
+        v-if="cart.items.length === 0"
+        type="info"
+        variant="tonal"
+        class="cart-empty"
+        rounded="lg"
+      >
+        <span class="text-body-1">장바구니가 비어있습니다.</span>
+        <v-btn :to="{ name: 'home' }" variant="flat" color="primary" size="small" class="mt-3" rounded="lg">
+          상품 보러가기
+        </v-btn>
+      </v-alert>
 
-    <div v-else class="list">
-      <div class="row" v-for="it in cart.items" :key="it.productId">
-        <img class="thumb" :src="it.image" :alt="it.name" />
-        <div class="meta">
-          <div class="name">{{ it.name }}</div>
-          <div class="sub">{{ it.price.toLocaleString() }}원</div>
+      <template v-else>
+        <div class="cart-list">
+          <v-card
+            v-for="it in cart.items"
+            :key="it.productId"
+            variant="outlined"
+            class="cart-item-card"
+            rounded="lg"
+          >
+            <div class="cart-item-inner">
+              <RouterLink :to="`/product/${it.productId}`" class="cart-item-thumb">
+                <v-img
+                  :src="it.image"
+                  :alt="it.name"
+                  width="100"
+                  height="100"
+                  cover
+                  class="rounded-lg"
+                />
+              </RouterLink>
+
+              <div class="cart-item-info">
+                <RouterLink :to="`/product/${it.productId}`" class="cart-item-name">
+                  {{ it.name }}
+                </RouterLink>
+                <div class="cart-item-price text-body-2 text-medium-emphasis">
+                  {{ it.price.toLocaleString() }}원
+                </div>
+
+                <div class="cart-item-actions">
+                  <v-text-field
+                    :model-value="it.qty"
+                    type="number"
+                    min="1"
+                    density="compact"
+                    hide-details
+                    variant="outlined"
+                    class="cart-item-qty"
+                    @update:model-value="(v) => onQty(it.productId, v)"
+                  />
+                  <v-btn
+                    icon
+                    variant="text"
+                    size="small"
+                    color="error"
+                    class="cart-item-remove"
+                    aria-label="삭제"
+                    @click="cart.remove(it.productId)"
+                  >
+                    <v-icon size="small">mdi-delete-outline</v-icon>
+                  </v-btn>
+                </div>
+              </div>
+
+              <div class="cart-item-total">
+                <span class="text-subtitle-1 font-weight-bold">{{ (it.price * it.qty).toLocaleString() }}원</span>
+              </div>
+            </div>
+          </v-card>
         </div>
 
-        <input class="qty" type="number" min="1" :value="it.qty" @input="onQty(it.productId, $event)" />
-
-        <div class="sum">{{ (it.price * it.qty).toLocaleString() }}원</div>
-        <button class="del" @click="cart.remove(it.productId)">삭제</button>
-      </div>
-
-      <div class="total">
-        <div>총 수량: <b>{{ cart.totalQty }}</b></div>
-        <div>총 금액: <b>{{ cart.totalPrice.toLocaleString() }}원</b></div>
-      </div>
-
-      <div class="actions">
-        <button class="ghost" @click="cart.clear()">비우기</button>
-        <RouterLink class="btn" to="/checkout">주문하기</RouterLink>
-      </div>
-    </div>
-  </section>
+        <v-card variant="outlined" class="cart-summary" rounded="lg">
+          <v-card-text>
+            <div class="summary-row">
+              <span class="text-body-1">총 수량</span>
+              <span class="text-body-1 font-weight-bold">{{ cart.totalQty }}개</span>
+            </div>
+            <v-divider class="my-3" />
+            <div class="summary-row summary-total">
+              <span class="text-subtitle-1">총 결제 금액</span>
+              <span class="text-h6 font-weight-bold text-primary">{{ cart.totalPrice.toLocaleString() }}원</span>
+            </div>
+          </v-card-text>
+          <v-card-actions class="px-4 pb-4 pt-0">
+            <v-btn variant="outlined" rounded="lg" @click="cart.clear()">장바구니 비우기</v-btn>
+            <v-spacer />
+            <v-btn color="primary" rounded="lg" :to="{ name: 'checkout' }" size="large">
+              주문하기
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-container>
+  </div>
 </template>
 
 <script setup>
 import { useCartStore } from '../stores/cart'
+
 const cart = useCartStore()
 
-function onQty(productId, e) {
-  cart.setQty(productId, e.target.value)
+function onQty(productId, value) {
+  cart.setQty(productId, value)
 }
 </script>
 
 <style scoped>
-.wrap {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 18px 16px;
+.cart-page {
+  min-height: 60vh;
 }
 
-.title {
-  margin: 0 0 14px;
+.cart-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
 }
 
-.empty {
-  padding: 18px;
-  border: 1px dashed #ddd;
-  border-radius: 14px;
-  color: #444;
+.cart-empty {
+  padding: 2rem;
+  text-align: center;
 }
 
-.list {
+.cart-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.row {
+.cart-item-card {
+  overflow: hidden;
+}
+
+.cart-item-inner {
   display: grid;
-  grid-template-columns: 72px 1fr 90px 120px 70px;
-  gap: 10px;
+  grid-template-columns: 100px 1fr auto;
+  gap: 1.25rem;
   align-items: center;
-  border: 1px solid #eee;
-  border-radius: 14px;
-  padding: 10px;
-  background: #fff;
+  padding: 1rem 1.25rem;
 }
 
-.thumb {
-  width: 72px;
-  height: 48px;
-  object-fit: cover;
-  border-radius: 10px;
-  border: 1px solid #eee;
+.cart-item-thumb {
+  display: block;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgb(var(--v-theme-surface-variant));
 }
 
-.meta .name {
-  font-weight: 700;
+.cart-item-thumb:hover {
+  opacity: 0.9;
 }
 
-.meta .sub {
-  color: #666;
-  font-size: 13px;
-  margin-top: 4px;
+.cart-item-info {
+  min-width: 0;
 }
 
-.qty {
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
+.cart-item-name {
+  display: block;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 0.25rem;
 }
 
-.sum {
+.cart-item-name:hover {
+  text-decoration: underline;
+  color: rgb(var(--v-theme-primary));
+}
+
+.cart-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.cart-item-qty {
+  max-width: 88px;
+}
+
+.cart-item-remove {
+  flex-shrink: 0;
+}
+
+.cart-item-total {
   text-align: right;
-  font-weight: 800;
+  white-space: nowrap;
 }
 
-.del {
-  border: 1px solid #ddd;
-  background: #fff;
-  padding: 10px 12px;
-  border-radius: 10px;
-  cursor: pointer;
+.cart-summary {
+  max-width: 480px;
+  margin-left: auto;
 }
 
-.total {
+.summary-row {
   display: flex;
   justify-content: space-between;
-  padding: 12px 6px;
-  color: #111;
+  align-items: center;
 }
 
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+.summary-total {
+  margin-top: 0.25rem;
 }
 
-.ghost {
-  border: 1px solid #111;
-  background: #fff;
-  color: #111;
-  padding: 10px 12px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.btn {
-  text-decoration: none;
-  border: 1px solid #111;
-  background: #111;
-  color: #fff;
-  padding: 10px 12px;
-  border-radius: 10px;
-}
-
-@media (max-width: 860px) {
-  .row {
-    grid-template-columns: 72px 1fr 90px;
-    grid-auto-rows: auto;
+@media (max-width: 600px) {
+  .cart-item-inner {
+    grid-template-columns: 80px 1fr;
+    grid-template-rows: auto auto;
   }
 
-  .sum, .del {
-    grid-column: 2 / 4;
-    justify-self: end;
+  .cart-item-total {
+    grid-column: 2;
+    text-align: left;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(128, 128, 128, 0.2);
+  }
+
+  .cart-item-qty {
+    max-width: 72px;
   }
 }
 </style>

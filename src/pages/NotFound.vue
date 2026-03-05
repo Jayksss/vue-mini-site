@@ -1,15 +1,7 @@
 <template>
-  <section class="wrap">
-    <h1>404</h1>
-    <p>페이지를 찾을 수 없습니다.</p>
-    <RouterLink to="/">홈으로</RouterLink>
-  </section>
+  <v-container class="py-12 text-center">
+    <h1 class="text-h2 mb-2">404</h1>
+    <p class="text-body-1 text-medium-emphasis mb-4">페이지를 찾을 수 없습니다.</p>
+    <v-btn color="primary" :to="{ name: 'home' }">홈으로</v-btn>
+  </v-container>
 </template>
-
-<style scoped>
-.wrap {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 18px 16px;
-}
-</style>

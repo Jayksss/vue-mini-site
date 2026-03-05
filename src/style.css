@@ -1,69 +1,48 @@
-/* =========================
-   Dark Theme (global)
-   ========================= */
-
-/* 색상 토큰(실무에서 제일 많이 쓰는 방식) */
-:root {
-  --bg: #121212;
-  --card: #1e1e1e;
-  --card-2: #181818;
-  --text: #eaeaea;
-  --muted: #a9a9a9;
-  --border: #2a2a2a;
-  --border-2: #333;
-  --primary: #9ecbff;
-
-  --radius: 14px;
+/* 전역: 트렌디·깔끔한 기초 스타일 */
+* {
+  box-sizing: border-box;
 }
 
-/* 기본 리셋 */
-* { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
 
-html, body {
+html,
+body {
+  margin: 0;
   height: 100%;
+  overflow-x: hidden;
 }
 
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-
-  background: var(--bg);
-  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* 링크 */
-a {
-  color: var(--primary);
-  text-decoration: none;
-}
-a:hover {
-  opacity: 0.9;
-  text-decoration: underline;
-}
-
-/* 입력류 공통 */
-input,
-textarea {
-  background: var(--card);
-  color: var(--text);
-  border: 1px solid var(--border-2);
-  border-radius: 10px;
-  outline: none;
-}
-
-input:focus,
-textarea:focus {
-  border-color: var(--primary);
-}
-
-/* 버튼 공통 */
-button {
-  font-family: inherit;
-  cursor: pointer;
-}
-
-/* Vite 기본 템플릿이 #app을 가운데 정렬/센터링하는데,
-   우리는 웹사이트 레이아웃이니까 “센터링 제거” */
 #app {
   min-height: 100vh;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Vuetify 카드·입력 통일감 */
+.v-card {
+  border: 1px solid rgba(128, 128, 128, 0.12);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.v-card:hover {
+  border-color: rgba(128, 128, 128, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.v-field--variant-outlined .v-field__outline {
+  --v-border-opacity: 0.2;
+}
+
+.v-btn {
+  text-transform: none;
+  letter-spacing: -0.01em;
 }

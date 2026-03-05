@@ -1,24 +1,40 @@
 <template>
-  <article class="card">
-    <RouterLink class="thumb" :to="`/product/${product.id}`">
-      <img :src="product.image" :alt="product.name" />
+  <v-card variant="outlined" class="product-card fill-height d-flex flex-column">
+    <RouterLink :to="`/product/${product.id}`" class="text-decoration-none card-link">
+      <v-img
+        :src="product.image"
+        :alt="product.name"
+        aspect-ratio="1.25"
+        cover
+        class="product-card-img"
+      />
     </RouterLink>
 
-    <div class="body">
-      <RouterLink class="name" :to="`/product/${product.id}`">
-        {{ product.name }}
+    <v-card-text class="flex-grow-1 pt-3 pb-1">
+      <RouterLink :to="`/product/${product.id}`" class="text-decoration-none text-medium-emphasis card-link">
+        <span class="font-weight-bold text-body-1 product-name">{{ product.name }}</span>
       </RouterLink>
-      <div class="price">{{ product.price.toLocaleString() }}원</div>
+      <div class="text-body-2 mt-1 text-high-emphasis">{{ product.price.toLocaleString() }}원</div>
+    </v-card-text>
 
-      <button class="btn" @click="cart.add(product, 1)">
+    <v-card-actions class="pt-0 pb-3 px-3">
+      <v-btn
+        variant="flat"
+        color="primary"
+        block
+        rounded="lg"
+        size="small"
+        @click="cart.add(product, 1)"
+      >
         장바구니 담기
-      </button>
-    </div>
-  </article>
+      </v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script setup>
 import { useCartStore } from '../stores/cart'
+
 const props = defineProps({
   product: { type: Object, required: true },
 })
@@ -26,49 +42,16 @@ const cart = useCartStore()
 </script>
 
 <style scoped>
-.card {
-  border: 1px solid #eee;
-  border-radius: 14px;
-  overflow: hidden;
-  background: #fff;
-}
-
-.thumb {
-  display: block;
-  aspect-ratio: 3/2;
+.product-card {
+  border-radius: 12px;
   overflow: hidden;
 }
 
-.thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+.card-link:hover .product-name {
+  text-decoration: underline;
 }
 
-.body {
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.name {
-  text-decoration: none;
-  color: #111;
-  font-weight: 700;
-}
-
-.price {
-  color: #444;
-}
-
-.btn {
-  border: 1px solid #111;
-  background: #111;
-  color: #fff;
-  padding: 10px 12px;
-  border-radius: 10px;
-  cursor: pointer;
+.product-card-img {
+  background: rgb(var(--v-theme-surface-variant));
 }
 </style>
