@@ -1,139 +1,68 @@
 <template>
   <div class="util-buttons">
-    <!-- 위로가기 (단독) -->
-    <v-tooltip location="left">
-      <template #activator="{ props: tooltipProps }">
-        <v-btn
-          v-bind="tooltipProps"
-          icon
-          size="small"
-          variant="flat"
-          class="util-btn util-btn-top"
-          aria-label="페이지 맨 위로"
-          @click="scrollToTop"
-        >
-          <v-icon size="small">mdi-arrow-up</v-icon>
-        </v-btn>
-      </template>
-      <span>페이지 맨 위로</span>
-    </v-tooltip>
+    <el-tooltip content="페이지 맨 위로" placement="left">
+      <el-button circle class="util-btn" aria-label="페이지 맨 위로" @click.prevent="scrollToTop">
+        <el-icon><ArrowUp /></el-icon>
+      </el-button>
+    </el-tooltip>
 
-    <!-- 모음 버튼: 클릭 시 펼쳐짐 -->
     <div class="util-collection">
       <transition name="util-expand">
         <div v-show="expanded" class="util-expanded">
-          <v-tooltip location="left">
-            <template #activator="{ props: tooltipProps }">
-              <v-btn
-                v-bind="tooltipProps"
-                icon
-                size="small"
-                variant="flat"
-                class="util-btn"
-                aria-label="통합검색"
-                @click="openSearchModal = true"
-              >
-                <v-icon size="small">mdi-magnify</v-icon>
-              </v-btn>
-            </template>
-            <span>통합검색</span>
-          </v-tooltip>
-          <v-tooltip location="left">
-            <template #activator="{ props: tooltipProps }">
-              <v-btn
-                v-bind="tooltipProps"
-                icon
-                size="small"
-                variant="flat"
-                class="util-btn"
-                aria-label="인쇄"
-                @click="printPage"
-              >
-                <v-icon size="small">mdi-printer</v-icon>
-              </v-btn>
-            </template>
-            <span>인쇄</span>
-          </v-tooltip>
-          <v-tooltip location="left">
-            <template #activator="{ props: tooltipProps }">
-              <v-btn
-                v-bind="tooltipProps"
-                icon
-                size="small"
-                variant="flat"
-                class="util-btn"
-                aria-label="링크 복사"
-                @click="openLinkModal = true"
-              >
-                <v-icon size="small">mdi-link-variant</v-icon>
-              </v-btn>
-            </template>
-            <span>링크 복사</span>
-          </v-tooltip>
+          <el-tooltip content="통합검색" placement="left">
+            <el-button circle class="util-btn util-btn-search" type="primary" @click="openSearchModal = true">
+              <el-icon><Search /></el-icon>
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="인쇄" placement="left">
+            <el-button circle class="util-btn" @click="printPage">
+              <el-icon><Printer /></el-icon>
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="링크 복사" placement="left">
+            <el-button circle class="util-btn" @click="openLinkModal = true">
+              <el-icon><Link /></el-icon>
+            </el-button>
+          </el-tooltip>
         </div>
       </transition>
-      <v-tooltip location="left">
-        <template #activator="{ props: tooltipProps }">
-          <v-btn
-            v-bind="tooltipProps"
-            icon
-            size="small"
-            variant="flat"
-            class="util-btn util-btn-main"
-            aria-label="더보기"
-            @click="expanded = !expanded"
-          >
-            <v-icon size="small">{{ expanded ? 'mdi-close' : 'mdi-dots-horizontal' }}</v-icon>
-          </v-btn>
-        </template>
-        <span>{{ expanded ? '접기' : '더보기' }}</span>
-      </v-tooltip>
+      <el-tooltip :content="expanded ? '접기' : '더보기'" placement="left">
+        <el-button circle class="util-btn util-btn-main" @click="expanded = !expanded">
+          <el-icon><Close v-if="expanded" /><MoreFilled v-else /></el-icon>
+        </el-button>
+      </el-tooltip>
     </div>
 
-    <!-- 통합검색 모달 -->
-    <v-dialog v-model="openSearchModal" max-width="520" persistent class="search-modal-dialog">
-      <v-card class="search-modal-card">
-        <v-card-title class="text-subtitle-1 font-weight-bold">통합검색</v-card-title>
-        <v-card-text>
-          <SearchForm @search="onSearchSubmit" />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn variant="text" @click="openSearchModal = false">닫기</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <el-dialog
+      v-model="openSearchModal"
+      title="통합검색"
+      width="560px"
+      class="search-modal-dialog"
+      align-center
+    >
+      <div class="search-modal-body">
+        <SearchForm @search="onSearchSubmit" />
+      </div>
+      <template #footer>
+        <el-button @click="openSearchModal = false">닫기</el-button>
+      </template>
+    </el-dialog>
 
-    <!-- 링크 복사 모달 -->
-    <v-dialog v-model="openLinkModal" max-width="420" persistent>
-      <v-card>
-        <v-card-title class="text-subtitle-1">현재 페이지 링크</v-card-title>
-        <v-card-text>
-          <v-text-field
-            :model-value="currentUrl"
-            readonly
-            variant="outlined"
-            density="compact"
-            hide-details
-            class="mb-2"
-          />
-          <p class="text-caption text-medium-emphasis">위 링크를 복사하여 공유할 수 있습니다.</p>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn variant="text" @click="openLinkModal = false">닫기</v-btn>
-          <v-btn color="primary" variant="flat" @click="copyLink">
-            {{ copySuccess ? '복사됨' : '복사' }}
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <el-dialog v-model="openLinkModal" title="현재 페이지 링크" width="420px">
+      <el-input :model-value="currentUrl" readonly class="mb-2" />
+      <p class="text-caption">위 링크를 복사하여 공유할 수 있습니다.</p>
+      <template #footer>
+        <el-button @click="openLinkModal = false">닫기</el-button>
+        <el-button type="primary" @click="copyLink">{{ copySuccess ? '복사됨' : '복사' }}</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { ArrowUp, Search, Printer, Link, Close, MoreFilled } from '@element-plus/icons-vue'
 import SearchForm from './SearchForm.vue'
 
 const route = useRoute()
@@ -149,7 +78,13 @@ const currentUrl = computed(() => {
 })
 
 function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  const el = document.scrollingElement || document.documentElement || document.body
+  if (el) {
+    el.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+  document.documentElement.scrollTop = 0
+  document.body.scrollTop = 0
 }
 
 function printPage() {
@@ -190,10 +125,35 @@ function onSearchSubmit({ keyword, condition }) {
 
 .util-btn {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
-.util-btn-top {
-  border-radius: 50%;
+.util-btn :deep(.el-icon) {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.util-btn-search {
+  background: var(--el-color-primary) !important;
+  border-color: var(--el-color-primary) !important;
+}
+
+.util-btn-search :deep(.el-icon) {
+  color: #fff;
+  font-size: 20px;
+}
+
+.util-btn-search:hover {
+  opacity: 0.9;
 }
 
 .util-collection {
@@ -206,11 +166,13 @@ function onSearchSubmit({ keyword, condition }) {
 .util-expanded {
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   gap: 0.35rem;
 }
 
-.util-btn-main {
-  border-radius: 50%;
+.util-expanded .el-tooltip__trigger {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .util-expand-enter-active,
@@ -224,8 +186,23 @@ function onSearchSubmit({ keyword, condition }) {
   transform: translateY(6px);
 }
 
-.search-modal-card {
-  border-radius: 16px;
+.text-caption {
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+  margin-top: 0.5rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.search-modal-body {
+  padding: 0.5rem 0;
+}
+
+.search-modal-dialog :deep(.el-dialog__body) {
+  padding-top: 0;
+  padding-bottom: 12px;
 }
 
 @media print {

@@ -1,42 +1,30 @@
 <template>
-  <v-container v-if="product" class="py-6">
-    <v-row>
-      <v-col cols="12" md="6">
-        <v-img
-          :src="product.image"
-          :alt="product.name"
-          aspect-ratio="1"
-          cover
-          class="rounded-lg"
-        />
-      </v-col>
-      <v-col cols="12" md="6">
-        <h1 class="text-h4 mb-2">{{ product.name }}</h1>
-        <div class="text-h6 text-primary mb-3">{{ product.price.toLocaleString() }}원</div>
-        <p class="text-body-1 text-medium-emphasis mb-4">{{ product.description }}</p>
-
-        <div class="d-flex align-center flex-wrap gap-2">
-          <v-text-field
-            v-model.number="qty"
-            type="number"
-            min="1"
-            density="compact"
-            hide-details
-            style="max-width: 100px;"
-            variant="outlined"
-            rounded="lg"
-          />
-          <v-btn color="primary" rounded="lg" @click="addToCart">장바구니 담기</v-btn>
-          <v-btn variant="outlined" rounded="lg" :to="{ name: 'cart' }">장바구니로</v-btn>
+  <div v-if="product" class="page-container" style="padding-top: 1.5rem; padding-bottom: 1.5rem;">
+    <el-row :gutter="24">
+      <el-col :xs="24" :md="12">
+        <el-image :src="product.image" :alt="product.name" fit="cover" style="width: 100%; border-radius: 12px;" />
+      </el-col>
+      <el-col :xs="24" :md="12">
+        <h1 class="product-detail-title">{{ product.name }}</h1>
+        <div class="product-detail-price">{{ product.price.toLocaleString() }}원</div>
+        <p class="product-detail-desc">{{ product.description }}</p>
+        <div class="product-detail-actions">
+          <el-input-number v-model="qty" :min="1" size="default" style="max-width: 120px;" />
+          <el-button type="primary" @click="addToCart">장바구니 담기</el-button>
+          <RouterLink :to="{ name: 'cart' }">
+            <el-button>장바구니로</el-button>
+          </RouterLink>
         </div>
-      </v-col>
-    </v-row>
-  </v-container>
+      </el-col>
+    </el-row>
+  </div>
 
-  <v-container v-else class="py-6">
-    <h1 class="text-h5 mb-3">상품을 찾을 수 없습니다.</h1>
-    <v-btn rounded="lg" :to="{ name: 'home' }">목록으로</v-btn>
-  </v-container>
+  <div v-else class="page-container" style="padding-top: 1.5rem; padding-bottom: 1.5rem;">
+    <h1 class="text-h5" style="margin-bottom: 0.75rem;">상품을 찾을 수 없습니다.</h1>
+    <RouterLink :to="{ name: 'home' }">
+      <el-button>목록으로</el-button>
+    </RouterLink>
+  </div>
 </template>
 
 <script setup>
@@ -56,3 +44,31 @@ function addToCart() {
   cart.add(product.value, qty.value)
 }
 </script>
+
+<style scoped>
+.product-detail-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.product-detail-price {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--el-color-primary);
+  margin-bottom: 0.75rem;
+}
+
+.product-detail-desc {
+  color: var(--el-text-color-regular);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.product-detail-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+</style>

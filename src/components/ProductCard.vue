@@ -1,41 +1,33 @@
 <template>
-  <v-card variant="outlined" class="product-card fill-height d-flex flex-column">
-    <RouterLink :to="`/product/${product.id}`" class="text-decoration-none card-link">
-      <v-img
+  <el-card class="product-card" shadow="hover">
+    <RouterLink :to="`/product/${product.id}`" class="card-link">
+      <el-image
         :src="product.image"
         :alt="product.name"
-        aspect-ratio="1.25"
-        cover
+        fit="cover"
         class="product-card-img"
       />
     </RouterLink>
 
-    <v-card-text class="flex-grow-1 pt-3 pb-1">
-      <RouterLink :to="`/product/${product.id}`" class="text-decoration-none text-medium-emphasis card-link">
-        <span class="font-weight-bold text-body-1 product-name">{{ product.name }}</span>
+    <div class="product-card-body">
+      <RouterLink :to="`/product/${product.id}`" class="card-link">
+        <span class="product-name">{{ product.name }}</span>
       </RouterLink>
-      <div class="text-body-2 mt-1 text-high-emphasis">{{ product.price.toLocaleString() }}원</div>
-    </v-card-text>
+      <div class="product-price">{{ product.price.toLocaleString() }}원</div>
+    </div>
 
-    <v-card-actions class="pt-0 pb-3 px-3">
-      <v-btn
-        variant="flat"
-        color="primary"
-        block
-        rounded="lg"
-        size="small"
-        @click="cart.add(product, 1)"
-      >
+    <div class="product-card-actions">
+      <el-button type="primary" size="small" style="width: 100%;" @click="cart.add(product, 1)">
         장바구니 담기
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+      </el-button>
+    </div>
+  </el-card>
 </template>
 
 <script setup>
 import { useCartStore } from '../stores/cart'
 
-const props = defineProps({
+defineProps({
   product: { type: Object, required: true },
 })
 const cart = useCartStore()
@@ -45,13 +37,52 @@ const cart = useCartStore()
 .product-card {
   border-radius: 12px;
   overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card :deep(.el-card__body) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 12px;
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
 }
 
 .card-link:hover .product-name {
   text-decoration: underline;
+  color: var(--el-color-primary);
 }
 
 .product-card-img {
-  background: rgb(var(--v-theme-surface-variant));
+  width: 100%;
+  aspect-ratio: 1.25;
+  display: block;
+  background: var(--el-fill-color-light);
+}
+
+.product-card-body {
+  flex: 1;
+  padding-top: 0.5rem;
+}
+
+.product-name {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.product-price {
+  font-size: 0.875rem;
+  color: var(--el-text-color-regular);
+  margin-top: 0.25rem;
+}
+
+.product-card-actions {
+  padding-top: 0.75rem;
 }
 </style>

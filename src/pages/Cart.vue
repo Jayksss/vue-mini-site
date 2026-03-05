@@ -1,108 +1,77 @@
 <template>
   <div class="cart-page">
-    <v-container class="py-6">
+    <div class="page-container cart-container">
       <h1 class="cart-title">장바구니</h1>
 
-      <v-alert
+      <el-alert
         v-if="cart.items.length === 0"
         type="info"
-        variant="tonal"
+        :closable="false"
         class="cart-empty"
-        rounded="lg"
+        show-icon
       >
-        <span class="text-body-1">장바구니가 비어있습니다.</span>
-        <v-btn :to="{ name: 'home' }" variant="flat" color="primary" size="small" class="mt-3" rounded="lg">
-          상품 보러가기
-        </v-btn>
-      </v-alert>
+        <span>장바구니가 비어있습니다.</span>
+        <RouterLink :to="{ name: 'home' }">
+          <el-button type="primary" size="small" class="mt-3">상품 보러가기</el-button>
+        </RouterLink>
+      </el-alert>
 
       <template v-else>
         <div class="cart-list">
-          <v-card
-            v-for="it in cart.items"
-            :key="it.productId"
-            variant="outlined"
-            class="cart-item-card"
-            rounded="lg"
-          >
+          <el-card v-for="it in cart.items" :key="it.productId" class="cart-item-card" shadow="never">
             <div class="cart-item-inner">
               <RouterLink :to="`/product/${it.productId}`" class="cart-item-thumb">
-                <v-img
-                  :src="it.image"
-                  :alt="it.name"
-                  width="100"
-                  height="100"
-                  cover
-                  class="rounded-lg"
-                />
+                <el-image :src="it.image" :alt="it.name" fit="cover" class="thumb-img" />
               </RouterLink>
 
               <div class="cart-item-info">
-                <RouterLink :to="`/product/${it.productId}`" class="cart-item-name">
-                  {{ it.name }}
-                </RouterLink>
-                <div class="cart-item-price text-body-2 text-medium-emphasis">
-                  {{ it.price.toLocaleString() }}원
-                </div>
-
+                <RouterLink :to="`/product/${it.productId}`" class="cart-item-name">{{ it.name }}</RouterLink>
+                <div class="cart-item-price">{{ it.price.toLocaleString() }}원</div>
                 <div class="cart-item-actions">
-                  <v-text-field
+                  <el-input-number
                     :model-value="it.qty"
-                    type="number"
-                    min="1"
-                    density="compact"
-                    hide-details
-                    variant="outlined"
+                    :min="1"
+                    size="small"
                     class="cart-item-qty"
                     @update:model-value="(v) => onQty(it.productId, v)"
                   />
-                  <v-btn
-                    icon
-                    variant="text"
-                    size="small"
-                    color="error"
-                    class="cart-item-remove"
-                    aria-label="삭제"
-                    @click="cart.remove(it.productId)"
-                  >
-                    <v-icon size="small">mdi-delete-outline</v-icon>
-                  </v-btn>
+                  <el-button type="danger" link size="small" class="cart-item-remove" @click="cart.remove(it.productId)">
+                    <el-icon><Delete /></el-icon>
+                  </el-button>
                 </div>
               </div>
 
               <div class="cart-item-total">
-                <span class="text-subtitle-1 font-weight-bold">{{ (it.price * it.qty).toLocaleString() }}원</span>
+                <span class="total-text">{{ (it.price * it.qty).toLocaleString() }}원</span>
               </div>
             </div>
-          </v-card>
+          </el-card>
         </div>
 
-        <v-card variant="outlined" class="cart-summary" rounded="lg">
-          <v-card-text>
-            <div class="summary-row">
-              <span class="text-body-1">총 수량</span>
-              <span class="text-body-1 font-weight-bold">{{ cart.totalQty }}개</span>
-            </div>
-            <v-divider class="my-3" />
-            <div class="summary-row summary-total">
-              <span class="text-subtitle-1">총 결제 금액</span>
-              <span class="text-h6 font-weight-bold text-primary">{{ cart.totalPrice.toLocaleString() }}원</span>
-            </div>
-          </v-card-text>
-          <v-card-actions class="px-4 pb-4 pt-0">
-            <v-btn variant="outlined" rounded="lg" @click="cart.clear()">장바구니 비우기</v-btn>
-            <v-spacer />
-            <v-btn color="primary" rounded="lg" :to="{ name: 'checkout' }" size="large">
-              주문하기
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+        <el-card class="cart-summary" shadow="never">
+          <div class="summary-row">
+            <span>총 수량</span>
+            <span class="font-bold">{{ cart.totalQty }}개</span>
+          </div>
+          <el-divider />
+          <div class="summary-row summary-total">
+            <span>총 결제 금액</span>
+            <span class="summary-price">{{ cart.totalPrice.toLocaleString() }}원</span>
+          </div>
+          <div class="summary-actions">
+            <el-button @click="cart.clear()">장바구니 비우기</el-button>
+            <RouterLink :to="{ name: 'checkout' }">
+              <el-button type="primary" size="large">주문하기</el-button>
+            </RouterLink>
+          </div>
+        </el-card>
       </template>
-    </v-container>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { Delete } from '@element-plus/icons-vue'
 import { useCartStore } from '../stores/cart'
 
 const cart = useCartStore()
@@ -117,6 +86,11 @@ function onQty(productId, value) {
   min-height: 60vh;
 }
 
+.cart-container {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
 .cart-title {
   font-size: 1.5rem;
   font-weight: 700;
@@ -125,8 +99,12 @@ function onQty(productId, value) {
 }
 
 .cart-empty {
-  padding: 2rem;
+  padding: 1.5rem;
   text-align: center;
+}
+
+.mt-3 {
+  margin-top: 0.75rem;
 }
 
 .cart-list {
@@ -136,8 +114,8 @@ function onQty(productId, value) {
   margin-bottom: 1.5rem;
 }
 
-.cart-item-card {
-  overflow: hidden;
+.cart-item-card :deep(.el-card__body) {
+  padding: 1rem 1.25rem;
 }
 
 .cart-item-inner {
@@ -145,14 +123,19 @@ function onQty(productId, value) {
   grid-template-columns: 100px 1fr auto;
   gap: 1.25rem;
   align-items: center;
-  padding: 1rem 1.25rem;
 }
 
 .cart-item-thumb {
   display: block;
   border-radius: 12px;
   overflow: hidden;
-  background: rgb(var(--v-theme-surface-variant));
+  background: var(--el-fill-color-light);
+}
+
+.thumb-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
 }
 
 .cart-item-thumb:hover {
@@ -174,7 +157,12 @@ function onQty(productId, value) {
 
 .cart-item-name:hover {
   text-decoration: underline;
-  color: rgb(var(--v-theme-primary));
+  color: var(--el-color-primary);
+}
+
+.cart-item-price {
+  font-size: 0.875rem;
+  color: var(--el-text-color-regular);
 }
 
 .cart-item-actions {
@@ -188,13 +176,14 @@ function onQty(productId, value) {
   max-width: 88px;
 }
 
-.cart-item-remove {
-  flex-shrink: 0;
-}
-
 .cart-item-total {
   text-align: right;
   white-space: nowrap;
+}
+
+.total-text {
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 .cart-summary {
@@ -208,8 +197,25 @@ function onQty(productId, value) {
   align-items: center;
 }
 
+.font-bold {
+  font-weight: 600;
+}
+
 .summary-total {
   margin-top: 0.25rem;
+}
+
+.summary-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--el-color-primary);
+}
+
+.summary-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 
 @media (max-width: 600px) {
@@ -223,11 +229,16 @@ function onQty(productId, value) {
     text-align: left;
     margin-top: 0.5rem;
     padding-top: 0.5rem;
-    border-top: 1px solid rgba(128, 128, 128, 0.2);
+    border-top: 1px solid var(--el-border-color-lighter);
   }
 
   .cart-item-qty {
     max-width: 72px;
+  }
+
+  .thumb-img {
+    width: 80px;
+    height: 80px;
   }
 }
 </style>

@@ -1,9 +1,8 @@
 <template>
   <div class="search-results-page">
-    <v-container class="py-6">
-      <!-- 검색 결과 안내 -->
-      <div class="result-header mb-6">
-        <h1 class="text-h5 font-weight-bold mb-2">
+    <div class="page-container" style="padding-top: 1.5rem; padding-bottom: 1.5rem;">
+      <div class="result-header">
+        <h1 class="result-title">
           <template v-if="keyword">
             <span class="condition-label">{{ conditionLabel }}</span>
             <span class="keyword">"{{ keyword }}"</span>
@@ -13,48 +12,44 @@
             검색어를 입력해 주세요.
           </template>
         </h1>
-        <p v-if="keyword" class="text-body-2 text-medium-emphasis">
+        <p v-if="keyword" class="result-count">
           검색 결과 <strong>{{ filteredProducts.length }}</strong>건
         </p>
       </div>
 
-      <!-- 검색 결과 없음 -->
-      <v-alert
+      <el-alert
         v-if="keyword && filteredProducts.length === 0"
         type="info"
-        variant="tonal"
+        :closable="false"
+        show-icon
         class="mb-4"
       >
         검색 결과가 없습니다. 다른 검색어나 검색 조건을 이용해 보세요.
-        <v-btn :to="{ name: 'home' }" variant="text" size="small" class="mt-2">메인으로</v-btn>
-      </v-alert>
+        <RouterLink :to="{ name: 'home' }">
+          <el-button link type="primary" size="small" class="mt-2">메인으로</el-button>
+        </RouterLink>
+      </el-alert>
 
-      <!-- 상품 목록 -->
-      <v-row v-else-if="filteredProducts.length" dense>
-        <v-col
-          v-for="p in filteredProducts"
-          :key="p.id"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-        >
+      <el-row v-else-if="filteredProducts.length" :gutter="16">
+        <el-col v-for="p in filteredProducts" :key="p.id" :xs="24" :sm="12" :md="8" :lg="6">
           <ProductCard :product="p" />
-        </v-col>
-      </v-row>
+        </el-col>
+      </el-row>
 
-      <!-- 검색어 없을 때 메인 유도 -->
-      <div v-else class="empty-search text-center py-12">
-        <v-icon size="64" color="grey" class="mb-3">mdi-magnify</v-icon>
-        <p class="text-body-1 text-medium-emphasis mb-3">상품명, 브랜드, 카테고리 등으로 검색해 보세요.</p>
-        <v-btn color="primary" rounded="lg" :to="{ name: 'home' }">메인으로 이동</v-btn>
+      <div v-else class="empty-search">
+        <el-icon :size="64" color="var(--el-text-color-placeholder)" class="empty-icon"><Search /></el-icon>
+        <p class="empty-text">상품명, 브랜드, 카테고리 등으로 검색해 보세요.</p>
+        <RouterLink :to="{ name: 'home' }">
+          <el-button type="primary">메인으로 이동</el-button>
+        </RouterLink>
       </div>
-    </v-container>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import { Search } from '@element-plus/icons-vue'
 import ProductCard from '../components/ProductCard.vue'
 import { products } from '../mocks/products'
 import { searchConditions } from '../mocks/searchConditions'
@@ -98,23 +93,52 @@ const filteredProducts = computed(() => {
 
 .result-header {
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--el-border-color-lighter);
 }
 
-.result-header h1 {
+.result-title {
+  font-size: 1.125rem;
+  font-weight: 700;
   letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
 }
 
 .condition-label {
-  color: rgb(var(--v-theme-primary));
+  color: var(--el-color-primary);
 }
 
 .keyword {
   font-weight: 700;
 }
 
+.result-count {
+  font-size: 0.875rem;
+  color: var(--el-text-color-regular);
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
 .empty-search {
+  text-align: center;
+  padding: 3rem 1rem;
   border-radius: 16px;
-  background: rgb(var(--v-theme-surface-bright));
+  background: var(--el-fill-color-light);
+}
+
+.empty-icon {
+  margin-bottom: 0.75rem;
+}
+
+.empty-text {
+  font-size: 1rem;
+  color: var(--el-text-color-regular);
+  margin-bottom: 0.75rem;
 }
 </style>

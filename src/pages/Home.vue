@@ -1,60 +1,37 @@
 <template>
   <div class="main-page">
-    <!-- 통합검색 -->
     <div class="search-bar">
-      <v-container>
+      <div class="page-container">
         <div class="search-wrap">
           <SearchForm @search="runSearch" />
         </div>
-      </v-container>
+      </div>
     </div>
 
-    <!-- 가로 슬라이드 배너 -->
     <section class="banner-slider">
-      <div
-        ref="sliderEl"
-        class="slider-track"
-        @scroll="onSliderScroll"
-      >
+      <div ref="sliderEl" class="slider-track" @scroll="onSliderScroll">
         <div
           v-for="(banner, i) in mainBanners"
           :key="banner.id"
           class="slide"
           :style="{ width: slideWidth }"
         >
-          <v-img
-            :src="banner.image"
-            :alt="banner.title"
-            cover
-            class="slide-img"
-            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.4)"
-          >
-            <div class="slide-caption pa-4">
-              <div class="text-h5 font-weight-bold">{{ banner.title }}</div>
-              <div class="text-body-1 opacity-90">{{ banner.subtitle }}</div>
+          <div class="slide-img-wrap">
+            <img :src="banner.image" :alt="banner.title" class="slide-img" />
+            <div class="slide-caption">
+              <div class="slide-title">{{ banner.title }}</div>
+              <div class="slide-subtitle">{{ banner.subtitle }}</div>
             </div>
-          </v-img>
+          </div>
         </div>
       </div>
       <div class="slider-controls">
-        <v-btn
-          icon
-          variant="flat"
-          color="surface"
-          class="slider-btn prev"
-          @click="goSlide(currentSlide - 1)"
-        >
-          <v-icon>mdi-chevron-left</v-icon>
-        </v-btn>
-        <v-btn
-          icon
-          variant="flat"
-          color="surface"
-          class="slider-btn next"
-          @click="goSlide(currentSlide + 1)"
-        >
-          <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
+        <el-button circle class="slider-btn prev" @click="goSlide(currentSlide - 1)">
+          <el-icon><ArrowLeft /></el-icon>
+        </el-button>
+        <el-button circle class="slider-btn next" @click="goSlide(currentSlide + 1)">
+          <el-icon><ArrowRight /></el-icon>
+        </el-button>
       </div>
       <div class="slider-dots">
         <button
@@ -69,62 +46,42 @@
       </div>
     </section>
 
-    <!-- 오늘의 주요 상품 (스크롤 시 등장) -->
     <section
       ref="sectionProducts"
       class="section section-products"
       :class="{ visible: sectionProductsVisible }"
     >
-      <v-container>
-        <h2 class="section-title text-h4 mb-4">오늘의 주요 상품</h2>
-        <v-row dense>
-          <v-col
-            v-for="p in products"
-            :key="p.id"
-            cols="12"
-            sm="6"
-            md="4"
-          >
+      <div class="page-container">
+        <h2 class="section-title">오늘의 주요 상품</h2>
+        <el-row :gutter="16">
+          <el-col v-for="p in products" :key="p.id" :xs="24" :sm="12" :md="8">
             <ProductCard :product="p" />
-          </v-col>
-        </v-row>
-      </v-container>
+          </el-col>
+        </el-row>
+      </div>
     </section>
 
-    <!-- 이벤트 영역 (스크롤 시 등장) -->
     <section
       ref="sectionEvents"
       class="section section-events"
       :class="{ visible: sectionEventsVisible }"
     >
-      <v-container>
-        <h2 class="section-title text-h4 mb-4">이벤트</h2>
-        <v-row dense>
-          <v-col
-            v-for="event in events"
-            :key="event.id"
-            cols="12"
-            sm="6"
-            md="4"
-          >
-            <v-card variant="outlined" class="event-card fill-height">
-              <v-img
-                :src="event.image"
-                :alt="event.title"
-                height="140"
-                cover
-                class="bg-grey-lighten-2"
-              />
-              <v-card-text>
-                <v-chip size="small" color="primary" class="mb-2">{{ event.tag }}</v-chip>
-                <div class="text-subtitle-1 font-weight-bold">{{ event.title }}</div>
-                <div class="text-body-2 text-medium-emphasis mt-1">{{ event.description }}</div>
-                <div class="text-caption text-medium-emphasis mt-2">{{ event.period }}</div>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
+      <div class="page-container">
+        <h2 class="section-title">이벤트</h2>
+        <el-row :gutter="16">
+          <el-col v-for="event in events" :key="event.id" :xs="24" :sm="12" :md="8">
+            <el-card class="event-card" shadow="hover">
+              <el-image :src="event.image" :alt="event.title" fit="cover" style="height: 140px; width: 100%; border-radius: 8px;" />
+              <div style="padding-top: 12px;">
+                <el-tag size="small" type="primary" class="mb-2">{{ event.tag }}</el-tag>
+                <div class="event-title">{{ event.title }}</div>
+                <div class="event-desc">{{ event.description }}</div>
+                <div class="event-period">{{ event.period }}</div>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+      </div>
     </section>
   </div>
 </template>
@@ -132,6 +89,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
 import ProductCard from '../components/ProductCard.vue'
 import SearchForm from '../components/SearchForm.vue'
 import { products } from '../mocks/products'
@@ -269,10 +227,18 @@ onUnmounted(() => {
   scroll-snap-stop: always;
 }
 
-.slide-img {
+.slide-img-wrap {
+  position: relative;
   height: 50vw;
   min-height: 280px;
   max-height: 420px;
+}
+
+.slide-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .slide-caption {
@@ -280,8 +246,20 @@ onUnmounted(() => {
   bottom: 0;
   left: 0;
   right: 0;
+  padding: 1rem;
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+}
+
+.slide-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.slide-subtitle {
+  font-size: 0.875rem;
+  opacity: 0.9;
 }
 
 .slider-controls {
@@ -344,17 +322,36 @@ onUnmounted(() => {
 }
 
 .section-title {
+  font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: -0.02em;
+  margin-bottom: 1rem;
 }
 
 .event-card {
   border-radius: 12px;
   overflow: hidden;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  height: 100%;
 }
 
-.event-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+.event-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.event-desc {
+  font-size: 0.875rem;
+  color: var(--el-text-color-regular);
+  margin-top: 0.25rem;
+}
+
+.event-period {
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+  margin-top: 0.5rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
 }
 </style>

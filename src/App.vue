@@ -1,11 +1,11 @@
 <template>
-  <v-app>
+  <div class="app-root">
     <AppHeader />
-    <v-main class="app-main">
+    <main class="app-main">
       <RouterView />
-    </v-main>
+    </main>
     <UtilButtons />
-  </v-app>
+  </div>
 </template>
 
 <script setup>
@@ -14,13 +14,16 @@ import UtilButtons from './components/UtilButtons.vue'
 </script>
 
 <style>
-.app-main {
-  background: rgb(var(--v-theme-surface));
-  overflow-x: hidden;
-  max-width: 100%;
+.app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.v-container {
+.app-main {
+  flex: 1;
+  overflow-x: hidden;
   max-width: 100%;
+  background: var(--el-bg-color-page);
 }
 </style>
