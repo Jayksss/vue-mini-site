@@ -66,9 +66,16 @@ function submit() {
   align-items: stretch;
   width: 100%;
   border: 1px solid var(--el-border-color);
-  border-radius: 10px;
+  border-radius: 14px;
   overflow: hidden;
   background: var(--el-fill-color-blank);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-form-bar:focus-within {
+  border-color: var(--el-color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--el-color-primary-rgb, 64, 158, 255), 0.12);
 }
 
 .search-condition {
@@ -78,7 +85,7 @@ function submit() {
 .search-condition :deep(.el-input__wrapper) {
   border-radius: 0;
   box-shadow: none;
-  border-right: 1px solid var(--el-border-color);
+  border-right: 1px solid var(--el-border-color-lighter);
 }
 
 .search-input {
@@ -101,7 +108,8 @@ function submit() {
   margin: 0;
   border-radius: 0;
   height: 100%;
-  padding: 0 18px;
+  padding: 0 20px;
   color: #fff;
+  font-weight: 500;
 }
 </style>

@@ -88,20 +88,26 @@ const filteredProducts = computed(() => {
 
 <style scoped>
 .search-results-page {
-  min-height: 60vh;
+  min-height: 65vh;
+}
+
+.search-results-page .page-container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .result-header {
-  padding-bottom: 1rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--el-border-color-lighter);
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.75rem;
+  border-bottom: 2px solid var(--el-border-color-lighter);
 }
 
 .result-title {
-  font-size: 1.125rem;
+  font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
+  line-height: 1.45;
 }
 
 .condition-label {
@@ -113,7 +119,7 @@ const filteredProducts = computed(() => {
 }
 
 .result-count {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   color: var(--el-text-color-regular);
 }
 
@@ -127,18 +133,20 @@ const filteredProducts = computed(() => {
 
 .empty-search {
   text-align: center;
-  padding: 3rem 1rem;
-  border-radius: 16px;
+  padding: 3.5rem 1.5rem;
+  border-radius: 18px;
   background: var(--el-fill-color-light);
+  border: 1px dashed var(--el-border-color-lighter);
 }
 
 .empty-icon {
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  opacity: 0.7;
 }
 
 .empty-text {
   font-size: 1rem;
   color: var(--el-text-color-regular);
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 </style>

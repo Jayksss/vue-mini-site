@@ -71,8 +71,8 @@
         <el-row :gutter="16">
           <el-col v-for="event in events" :key="event.id" :xs="24" :sm="12" :md="8">
             <el-card class="event-card" shadow="hover">
-              <el-image :src="event.image" :alt="event.title" fit="cover" style="height: 140px; width: 100%; border-radius: 8px;" />
-              <div style="padding-top: 12px;">
+              <el-image :src="event.image" :alt="event.title" fit="cover" class="event-img" />
+              <div class="event-body">
                 <el-tag size="small" type="primary" class="mb-2">{{ event.tag }}</el-tag>
                 <div class="event-title">{{ event.title }}</div>
                 <div class="event-desc">{{ event.description }}</div>
@@ -184,17 +184,17 @@ onUnmounted(() => {
 
 <style scoped>
 .main-page {
-  padding-bottom: 3rem;
+  padding-bottom: 4rem;
   overflow-x: hidden;
   max-width: 100%;
 }
 
 .search-bar {
-  padding: 0.75rem 0;
+  padding: 1rem 0 1.25rem;
 }
 
 .search-wrap {
-  max-width: 720px;
+  max-width: 640px;
   margin: 0 auto;
 }
 
@@ -202,6 +202,12 @@ onUnmounted(() => {
   position: relative;
   width: 100%;
   overflow: hidden;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+html.dark .banner-slider {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
 }
 
 .slider-track {
@@ -230,8 +236,8 @@ onUnmounted(() => {
 .slide-img-wrap {
   position: relative;
   height: 50vw;
-  min-height: 280px;
-  max-height: 420px;
+  min-height: 300px;
+  max-height: 440px;
 }
 
 .slide-img {
@@ -246,20 +252,22 @@ onUnmounted(() => {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 1rem;
+  padding: 1.5rem 1.25rem;
   color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.15), transparent);
 }
 
 .slide-title {
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .slide-subtitle {
-  font-size: 0.875rem;
-  opacity: 0.9;
+  font-size: 0.9rem;
+  opacity: 0.95;
+  margin-top: 0.25rem;
 }
 
 .slider-controls {
@@ -272,16 +280,29 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 0.5rem;
+  padding: 0 0.75rem;
 }
 
 .slider-btn {
   pointer-events: auto;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: none !important;
+  color: #333 !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  transition: background 0.2s, transform 0.2s;
+}
+
+.slider-btn:hover {
+  background: #fff !important;
+  transform: scale(1.05);
 }
 
 .slider-dots {
   position: absolute;
-  bottom: 1rem;
+  bottom: 1.25rem;
   left: 0;
   right: 0;
   display: flex;
@@ -297,7 +318,7 @@ onUnmounted(() => {
   padding: 0;
   background: rgba(255, 255, 255, 0.5);
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
+  transition: background 0.25s, transform 0.25s;
 }
 
 .dot:hover,
@@ -306,13 +327,13 @@ onUnmounted(() => {
 }
 
 .dot.active {
-  transform: scale(1.2);
+  transform: scale(1.25);
 }
 
 .section {
-  padding: 3rem 0;
+  padding: 3.5rem 0;
   opacity: 0.4;
-  transform: translateY(24px);
+  transform: translateY(20px);
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
@@ -322,27 +343,48 @@ onUnmounted(() => {
 }
 
 .section-title {
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 1rem;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 3px solid var(--el-color-primary);
+  display: inline-block;
 }
 
 .event-card {
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
   height: 100%;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+}
+
+.event-img {
+  height: 140px;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.event-body {
+  padding-top: 12px;
 }
 
 .event-title {
   font-weight: 600;
   font-size: 1rem;
+  margin-top: 0.25rem;
 }
 
 .event-desc {
   font-size: 0.875rem;
   color: var(--el-text-color-regular);
-  margin-top: 0.25rem;
+  margin-top: 0.35rem;
+  line-height: 1.45;
 }
 
 .event-period {

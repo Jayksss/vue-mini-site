@@ -9,8 +9,8 @@
           <el-switch v-model="isDark" @change="toggleTheme" />
         </div>
         <RouterLink :to="{ name: 'home' }" class="nav-link">상품</RouterLink>
-        <el-badge :value="cart.totalQty" :hidden="cart.totalQty === 0">
-          <RouterLink :to="{ name: 'cart' }" class="nav-link">장바구니</RouterLink>
+        <el-badge :value="cart.totalQty" :hidden="cart.totalQty === 0" class="cart-badge">
+          <RouterLink :to="{ name: 'cart' }" class="nav-link nav-link-cart">장바구니</RouterLink>
         </el-badge>
       </div>
     </div>
@@ -44,13 +44,19 @@ function toggleTheme() {
   z-index: 50;
   background: var(--el-bg-color);
   border-bottom: 1px solid var(--el-border-color-lighter);
+  backdrop-filter: saturate(180%) blur(12px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+}
+
+html.dark .app-bar {
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .app-bar-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 16px;
-  height: 56px;
+  padding: 0 20px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -59,13 +65,14 @@ function toggleTheme() {
 .brand-link {
   text-decoration: none;
   font-weight: 700;
-  font-size: 1.125rem;
-  letter-spacing: -0.02em;
+  font-size: 1.2rem;
+  letter-spacing: -0.03em;
   color: var(--el-color-primary);
+  transition: opacity 0.2s ease;
 }
 
 .brand-link:hover {
-  opacity: 0.88;
+  opacity: 0.85;
 }
 
 .app-bar-actions {
@@ -77,23 +84,39 @@ function toggleTheme() {
 .theme-toggle {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding-right: 0.25rem;
+  gap: 0.35rem;
+  padding-right: 0.5rem;
+  margin-right: 0.25rem;
+  border-right: 1px solid var(--el-border-color-lighter);
 }
 
 .theme-icon {
-  font-size: 1.125rem;
+  font-size: 1.15rem;
+  color: var(--el-text-color-regular);
 }
 
 .nav-link {
-  color: var(--el-color-primary);
+  color: var(--el-text-color-primary);
   text-decoration: none;
-  font-size: 0.875rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.4rem 0.75rem;
+  border-radius: 10px;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .nav-link:hover {
   background: var(--el-fill-color-light);
+  color: var(--el-color-primary);
+}
+
+.nav-link-cart {
+  display: inline-flex;
+  align-items: center;
+}
+
+.cart-badge :deep(.el-badge__content) {
+  font-weight: 600;
+  font-size: 11px;
 }
 </style>

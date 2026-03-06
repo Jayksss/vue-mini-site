@@ -1,12 +1,14 @@
 <template>
   <el-card class="product-card" shadow="hover">
     <RouterLink :to="`/product/${product.id}`" class="card-link">
-      <el-image
-        :src="product.image"
-        :alt="product.name"
-        fit="cover"
-        class="product-card-img"
-      />
+      <div class="product-card-img-wrap">
+        <el-image
+          :src="product.image"
+          :alt="product.name"
+          fit="cover"
+          class="product-card-img"
+        />
+      </div>
     </RouterLink>
 
     <div class="product-card-body">
@@ -17,7 +19,7 @@
     </div>
 
     <div class="product-card-actions">
-      <el-button type="primary" size="small" style="width: 100%;" @click="cart.add(product, 1)">
+      <el-button type="primary" size="small" class="add-btn" @click="cart.add(product, 1)">
         장바구니 담기
       </el-button>
     </div>
@@ -35,18 +37,23 @@ const cart = useCartStore()
 
 <style scoped>
 .product-card {
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
   height: 100%;
   display: flex;
   flex-direction: column;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
 }
 
 .product-card :deep(.el-card__body) {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 12px;
+  padding: 14px;
 }
 
 .card-link {
@@ -55,34 +62,58 @@ const cart = useCartStore()
 }
 
 .card-link:hover .product-name {
-  text-decoration: underline;
   color: var(--el-color-primary);
+}
+
+.product-card-img-wrap {
+  width: 100%;
+  aspect-ratio: 1.25;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--el-fill-color-light);
 }
 
 .product-card-img {
   width: 100%;
-  aspect-ratio: 1.25;
+  height: 100%;
   display: block;
-  background: var(--el-fill-color-light);
+  transition: transform 0.35s ease;
+}
+
+.product-card:hover .product-card-img {
+  transform: scale(1.04);
 }
 
 .product-card-body {
   flex: 1;
-  padding-top: 0.5rem;
+  padding-top: 0.75rem;
 }
 
 .product-name {
   font-weight: 600;
   font-size: 1rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s ease;
 }
 
 .product-price {
-  font-size: 0.875rem;
-  color: var(--el-text-color-regular);
-  margin-top: 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--el-color-primary);
+  margin-top: 0.35rem;
 }
 
 .product-card-actions {
-  padding-top: 0.75rem;
+  padding-top: 0.85rem;
+}
+
+.add-btn {
+  width: 100%;
+  border-radius: 10px;
+  font-weight: 500;
 }
 </style>

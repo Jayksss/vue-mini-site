@@ -114,8 +114,8 @@ function onSearchSubmit({ keyword, condition }) {
 <style scoped>
 .util-buttons {
   position: fixed;
-  right: 1.25rem;
-  bottom: 1.5rem;
+  right: 1.5rem;
+  bottom: 1.75rem;
   z-index: 100;
   display: flex;
   flex-direction: column;
@@ -124,22 +124,34 @@ function onSearchSubmit({ keyword, condition }) {
 }
 
 .util-btn {
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
   padding: 0 !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.util-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .util-btn :deep(.el-icon) {
-  font-size: 18px;
+  font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0;
+}
+
+.util-btn-main {
+  background: var(--el-bg-color) !important;
+  border: 1px solid var(--el-border-color-lighter) !important;
 }
 
 .util-btn-search {
@@ -149,25 +161,20 @@ function onSearchSubmit({ keyword, condition }) {
 
 .util-btn-search :deep(.el-icon) {
   color: #fff;
-  font-size: 20px;
-}
-
-.util-btn-search:hover {
-  opacity: 0.9;
 }
 
 .util-collection {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.35rem;
+  gap: 0.4rem;
 }
 
 .util-expanded {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.35rem;
+  gap: 0.4rem;
 }
 
 .util-expanded .el-tooltip__trigger {
@@ -177,13 +184,13 @@ function onSearchSubmit({ keyword, condition }) {
 
 .util-expand-enter-active,
 .util-expand-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .util-expand-enter-from,
 .util-expand-leave-to {
   opacity: 0;
-  transform: translateY(6px);
+  transform: translateY(8px);
 }
 
 .text-caption {
@@ -203,6 +210,10 @@ function onSearchSubmit({ keyword, condition }) {
 .search-modal-dialog :deep(.el-dialog__body) {
   padding-top: 0;
   padding-bottom: 12px;
+}
+
+.search-modal-dialog :deep(.el-dialog) {
+  border-radius: 16px;
 }
 
 @media print {
