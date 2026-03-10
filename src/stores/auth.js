@@ -5,33 +5,34 @@ const STORAGE_KEY = 'vue-mini-site.auth'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: loadJSON(STORAGE_KEY, null), // { id, email, name, password } or null (mock: password 저장)
+    user: loadJSON(STORAGE_KEY, null), // { id, loginId, name, email?, password, role } or null
   }),
   getters: {
     isLoggedIn: (state) => !!state.user,
-    displayName: (state) => state.user?.name || state.user?.email || '회원',
+    displayName: (state) => state.user?.name || state.user?.loginId || state.user?.email || '회원',
     isAdmin: (state) => state.user?.role === 'admin',
   },
   actions: {
     persist() {
       saveJSON(STORAGE_KEY, this.user)
     },
-    login(email, password) {
-      const emailTrim = (email || '').trim()
-      const hasValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrim)
+    login(loginId, password) {
+      const idTrim = (loginId || '').trim()
+      const hasValidId = idTrim.length >= 3
       const hasValidPassword = (password || '').length >= 4
 
-      if (!hasValidEmail || !hasValidPassword) {
-        return { ok: false, message: '이메일 형식과 비밀번호(4자 이상)를 확인해 주세요.' }
+      if (!hasValidId || !hasValidPassword) {
+        return { ok: false, message: '아이디(3자 이상)와 비밀번호(4자 이상)를 확인해 주세요.' }
       }
 
-      const isAdmin = emailTrim === 'admin@vue-mini-site.com' || emailTrim === 'admin@test.com'
+      const isAdmin = idTrim === 'admin'
       this.user = {
         id: 'user-' + Date.now(),
-        email: emailTrim,
-        name: isAdmin ? '관리자' : emailTrim.split('@')[0],
+        loginId: idTrim,
+        name: isAdmin ? '관리자' : idTrim,
         password: password, // mock: 마이페이지 진입·비밀번호 변경 검증용
         role: isAdmin ? 'admin' : 'user',
+        // email: 기존 로그인 방식에서 저장했던 이메일은 updateProfile로만 관리
       }
       this.persist()
       return { ok: true }

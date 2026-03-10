@@ -4,7 +4,7 @@
       <el-card class="login-card" shadow="hover">
         <template #header>
           <h1 class="login-title">로그인</h1>
-          <p class="login-subtitle">이메일과 비밀번호를 입력해 주세요.</p>
+          <p class="login-subtitle">아이디와 비밀번호를 입력해 주세요.</p>
         </template>
 
         <el-form
@@ -15,14 +15,14 @@
           class="login-form"
           @submit.prevent="submit"
         >
-          <el-form-item label="이메일" prop="email">
+          <el-form-item label="아이디" prop="loginId">
             <el-input
-              v-model="form.email"
-              type="email"
-              placeholder="example@email.com"
+              v-model="form.loginId"
+              type="text"
+              placeholder="아이디를 입력해 주세요."
               size="large"
               clearable
-              autocomplete="email"
+              autocomplete="username"
             />
           </el-form-item>
           <el-form-item label="비밀번호" prop="password">
@@ -59,7 +59,7 @@
           </el-form-item>
         </el-form>
 
-        <p class="login-hint">테스트: 이메일 형식 + 비밀번호 4자 이상 입력 시 로그인됩니다.</p>
+        <p class="login-hint">테스트: 아이디 3자 이상 + 비밀번호 4자 이상 입력 시 로그인됩니다. (관리자: 아이디 admin)</p>
       </el-card>
     </div>
   </div>
@@ -79,14 +79,14 @@ const loading = ref(false)
 const errorMessage = ref('')
 
 const form = reactive({
-  email: '',
+  loginId: '',
   password: '',
 })
 
 const rules = {
-  email: [
-    { required: true, message: '이메일을 입력해 주세요.', trigger: 'blur' },
-    { type: 'email', message: '올바른 이메일 형식이 아닙니다.', trigger: 'blur' },
+  loginId: [
+    { required: true, message: '아이디를 입력해 주세요.', trigger: 'blur' },
+    { min: 3, message: '아이디는 3자 이상이어야 합니다.', trigger: 'blur' },
   ],
   password: [
     { required: true, message: '비밀번호를 입력해 주세요.', trigger: 'blur' },
@@ -100,7 +100,7 @@ async function submit() {
   if (!valid) return
   loading.value = true
   try {
-    const result = auth.login(form.email, form.password)
+    const result = auth.login(form.loginId, form.password)
     if (result.ok) {
       const redirect = (route.query.redirect || '/').toString()
       await router.push(redirect)
