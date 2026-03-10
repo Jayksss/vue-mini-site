@@ -9,9 +9,16 @@
           <el-switch v-model="isDark" @change="toggleTheme" />
         </div>
         <RouterLink :to="{ name: 'home' }" class="nav-link">상품</RouterLink>
+        <RouterLink :to="{ name: 'board' }" class="nav-link">게시판</RouterLink>
         <el-badge :value="cart.totalQty" :hidden="cart.totalQty === 0" class="cart-badge">
           <RouterLink :to="{ name: 'cart' }" class="nav-link nav-link-cart">장바구니</RouterLink>
         </el-badge>
+        <template v-if="auth.isLoggedIn">
+          <RouterLink :to="{ name: 'mypage' }" class="nav-link">마이페이지</RouterLink>
+          <span class="user-name">{{ auth.displayName }}님</span>
+          <el-button type="primary" link class="nav-link-btn" @click="logout">로그아웃</el-button>
+        </template>
+        <RouterLink v-else :to="{ name: 'login' }" class="nav-link">로그인</RouterLink>
       </div>
     </div>
   </header>
@@ -19,12 +26,16 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { Moon, Sunny } from '@element-plus/icons-vue'
 import { useCartStore } from '../stores/cart'
+import { useAuthStore } from '../stores/auth'
 
+const router = useRouter()
 const cart = useCartStore()
+const auth = useAuthStore()
 const isDark = ref(
-  typeof localStorage !== 'undefined' ? localStorage.getItem('vue-mini-site.theme') === 'dark' : true
+  typeof localStorage !== 'undefined' ? localStorage.getItem('vue-mini-site.theme') === 'dark' : false
 )
 
 onMounted(() => {
@@ -34,6 +45,11 @@ onMounted(() => {
 function toggleTheme() {
   document.documentElement.classList.toggle('dark', isDark.value)
   localStorage.setItem('vue-mini-site.theme', isDark.value ? 'dark' : 'light')
+}
+
+function logout() {
+  auth.logout()
+  router.push({ name: 'home' })
 }
 </script>
 
@@ -118,5 +134,17 @@ html.dark .app-bar {
 .cart-badge :deep(.el-badge__content) {
   font-weight: 600;
   font-size: 11px;
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--el-text-color-regular);
+  padding: 0 0.25rem 0 0.5rem;
+}
+
+.nav-link-btn {
+  padding: 0.4rem 0.5rem;
+  font-weight: 500;
 }
 </style>

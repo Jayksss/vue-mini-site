@@ -9,7 +9,7 @@ import 'element-plus/theme-chalk/dark/css-vars.css'
 
 import './style.css'
 
-const savedTheme = typeof localStorage !== 'undefined' ? localStorage.getItem('vue-mini-site.theme') || 'dark' : 'dark'
+const savedTheme = typeof localStorage !== 'undefined' ? localStorage.getItem('vue-mini-site.theme') || 'light' : 'light'
 if (typeof document !== 'undefined') {
   document.documentElement.classList.toggle('dark', savedTheme === 'dark')
 }
